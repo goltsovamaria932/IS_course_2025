@@ -159,8 +159,33 @@ test7()
 print("Тест 7 пройден!")
 
 def compute_mean_rowssum_columnssum(A):
-    """8. Для numpy массива A вычисляет среднее всех элементов, сумму строк и сумму столбцов."""
-    pass
+    """Для numpy массива A вычисляет среднее всех элементов, сумму строк и сумму столбцов.
+
+    Args:
+        A: numpy.ndarray - входной массив.
+
+    Returns:
+        tuple: Кортеж из трех элементов:
+            - mean: Среднее всех элементов массива A.
+            - rows_sum: Массив numpy, содержащий суммы элементов каждой строки.
+            - columns_sum: Массив numpy, содержащий суммы элементов каждого столбца.
+    """
+    mean = np.mean(A)
+    rows_sum = np.sum(A, axis=1)
+    columns_sum = np.sum(A, axis=0)
+    return mean, rows_sum, columns_sum
+
+def test8():
+    np.random.seed(42)
+    A = np.random.rand(3, 5)
+    mean, rows_sum, columns_sum = compute_mean_rowssum_columnssum(A)
+    assert np.abs(mean - 0.49456456164468965) < 1e-12
+    assert np.allclose(rows_sum, np.array([0.55111913, 1.97870777, 2.43061273, 1.41211261, 1.04591619]))
+    assert np.allclose(columns_sum, np.array([2.81192549, 2.38944187, 2.21710107]))
+
+# Запуск тестов
+
+print("Тест 8 пройден!")
 
 def sort_array_by_column(A, j):
     """Сортирует строки numpy массива A по j-му столбцу в порядке возрастания.
