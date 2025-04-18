@@ -188,9 +188,35 @@ test9()
 print("Тест 9 пройден!")
 
 def compute_integral(a, b, f, dx, method):
-    """10. Считает определённый интеграл функции f на отрезке [a, b] с шагом dx 3-мя методами:  
-    method == 'rectangular' - методом прямоугольника   
-    method == 'trapezoidal' - методом трапеций   
-    method == 'simpson' - методом Симпсона  
+    """Считает определённый интеграл функции f на отрезке [a, b] с шагом dx 3-мя методами:
+    method == 'rectangular' - методом прямоугольника
+    method == 'trapezoidal' - методом трапеций
+    method == 'simpson' - методом Симпсона
     """
-    pass
+    x = np.arange(a, b, dx)
+    if method == 'rectangular':
+        return np.sum(f(x) * dx)
+    elif method == 'trapezoidal':
+        return (dx/2) * (f(a) + 2*np.sum(f(x[1:])) + f(b-dx))
+    elif method == 'simpson':
+        n = len(x)
+        if n % 2 == 0:
+            x = x[:-1] # make n odd
+            n = len(x)
+        h = (b - a) / (n - 1) # redefine h
+        return (h/3) * (f(a) + 4*np.sum(f(x[1::2])) + 2*np.sum(f(x[2:-1:2])) + f(b-dx))
+
+def test10():
+    f1 = lambda x: (x**2 + 3) / (x - 2)
+    assert np.allclose(compute_integral(3, 4, f1, 0.001, method="rectangular"), 10.352030263919616, rtol=0.01)
+    assert np.allclose(compute_integral(3, 4, f1, 0.001, method="trapezoidal"), 10.352030263919616, rtol=0.01)
+    assert np.allclose(compute_integral(3, 4, f1, 0.001, method="simpson"), 10.352030263919616, rtol=0.001)
+
+    f2 = lambda x: np.cos(x)**3
+    assert np.allclose(compute_integral(0, np.pi/2, f2, 0.001, method="rectangular"), 2/3, rtol=0.01)
+    assert np.allclose(compute_integral(0, np.pi/2, f2, 0.001, method="trapezoidal"), 2/3, rtol=0.01)
+    assert np.allclose(compute_integral(0, np.pi/2, f2, 0.001, method="simpson"), 2/3, rtol=0.001)
+
+#Запуск тестов
+test10()
+print("Тест 10 пройден!")
